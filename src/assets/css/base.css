@@ -1,0 +1,13 @@
+@import './normalize.css';
+
+:root {
+  --color-text: #666;
+
+}
+
+::before,
+::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
