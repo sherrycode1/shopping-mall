@@ -27,7 +27,14 @@ export default {
   },
   methods:{
     imageLoad(){
+      
       this.$bus.$emit('itemImageLoad')
+
+      // if(this.$route.path.indexOf('/home')){
+      //   this.$bus.$emit('homeItemImgLoad')
+      // }else if(this.$route.path.indexOf('/detail')){
+      //   this.$bus.$emit('detailItemImgLoad')
+      // }
     },
     itemClick(){
       this.$router.push('/detail/'+ this.goodsItem.iid)

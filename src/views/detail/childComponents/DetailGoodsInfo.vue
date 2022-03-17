@@ -36,10 +36,12 @@ export default {
   },
   methods: {
     imgLoad(){
+
       // all imgs loaded
       if(++this.counter === this.imagesLength){
       this.$emit('imgLoad')
       }
+     
     }
   },
   watch: {
@@ -53,6 +55,7 @@ export default {
 <style scoped>
 .goods-info {
   padding-top: 20px;
+  position: relative;
 }
 
 .info-list img{

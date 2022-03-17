@@ -1,13 +1,13 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"> <div slot="center">购物街</div></nav-bar>
-     <tab-control
-        :titles="['流行', '新款', '精选']"
-        @tabClick="tabClick"
-        ref="tabControl1"
-        class="tabControl"
-        v-show="isTabFixed"
-      />
+    <tab-control
+      :titles="['流行', '新款', '精选']"
+      @tabClick="tabClick"
+      ref="tabControl1"
+      class="tabControl"
+      v-show="isTabFixed"
+    />
     <scroll
       class="content"
       ref="scroll"
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-//
+//components
 import RecommandView from "./childComps/RecommandView.vue";
 import FeatureView from "./childComps/FeatureView.vue";
 import HomeSwipper from "./childComps/HomeSwipper.vue";
@@ -45,9 +45,8 @@ import Scroll from "components/common/scroll/Scroll.vue";
 import GoodsList from "components/content/goods/GoodsList.vue";
 import BackTop from "components/content/backTop/BackTop.vue";
 
+import { itemListenerMixin } from "common/mixin.js";
 import { getHomeMultidata, getHomeGoods } from "network/home";
-
-import { debounce } from "common/utils.js";
 export default {
   name: "Home",
   components: {
@@ -73,7 +72,7 @@ export default {
       isShowBackTop: false,
       tabOffsetTop: 0,
       isTabFixed: false,
-      savaY:0
+      savaY: 0,
     };
   },
   // do not forget this
@@ -83,7 +82,6 @@ export default {
     },
   },
   created() {
-    console.log('hello');
     // without this, getHomeMultidata is from import
     this.getHomeMultidata();
     // request goods data
@@ -91,26 +89,22 @@ export default {
     this.getHomeGoods("sell");
     this.getHomeGoods("new");
   },
-  activated(){
-    this.$refs.scroll.scrollTo(0 , this.savaY ,0)
-    this.$refs.scroll.refresh()
+  activated() {
+    this.$refs.scroll.scrollTo(0, this.savaY, 0);
+    this.$refs.scroll.refresh();
   },
-  deactivated(){
-    
-    this.savaY = this.$refs.scroll.getScrollY()
-    console.log(this.savaY);
+  deactivated() {
+    // 1.keep y data
+    this.savaY = this.$refs.scroll.getScrollY();
+    // 2.cancel
+    this.$bus.$off("itemImageLoad", this.ItemImgListener);
   },
-  destroyed(){
-    console.log('i am destoryed');
+  destroyed() {
+    console.log("i am destoryed");
   },
-  mounted() {
-    const refresh = debounce(this.$refs.scroll.refresh);
-    this.$bus.$on("itemImageLoad", () => {
-      refresh();
-    });
-    // 2. tabControl offsetTop 组件有个属性$el：用于获取组件中的元素
-  },
- 
+
+  mounted() {},
+  mixins: [itemListenerMixin],
   methods: {
     // Monitor events
     tabClick(index) {
@@ -125,8 +119,8 @@ export default {
           this.currentType = "sell";
           break;
       }
-      this.$refs.tabControl1.currentIndex = index
-      this.$refs.tabControl2.currentIndex = index
+      this.$refs.tabControl1.currentIndex = index;
+      this.$refs.tabControl2.currentIndex = index;
     },
     backClick() {
       this.$refs.scroll.scrollTo(0, 0, 500);
@@ -177,7 +171,6 @@ export default {
 .home-nav {
   background-color: pink;
   color: white;
- 
 }
 
 .content {
@@ -185,7 +178,7 @@ export default {
   overflow: hidden;
 }
 
-.tabControl{
+.tabControl {
   position: relative;
   z-index: 9;
 }
