@@ -1,11 +1,15 @@
-export function debounce(func,delay=3000){
-  let timer = null 
+export function debounce(func, delay = 500) {
 
-  return function(...args) {
-    if(timer) clearTimeout(timer)
+  let timer = null
+
+  return function (...args) {
+
+    if (timer) clearTimeout(timer)
 
     timer = setTimeout(() => {
-      func.apply(this,args)
+
+      func.apply(this, args)
+
     }, delay);
   }
 }

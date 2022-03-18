@@ -1,13 +1,18 @@
 <template>
   <div id="detail">
-    <detail-nav-bar class="detail-nav" @titleClick="titleClick" />
-    <scroll class="content" ref="scroll">
+    <detail-nav-bar class="detail-nav" @titleClick="titleClick" ref="nav" />
+    <scroll
+      class="content"
+      ref="scroll"
+      :probe-type="3"
+      @scroll="contentScroll"
+    >
       <detail-swipper :top-images="topImages" />
       <detail-base-info :goods="goods"></detail-base-info>
       <detail-shop-info :shop="shop"></detail-shop-info>
       <detail-goods-info
         :detail-info="detailInfo"
-        @imageLoad="imageLoad"
+        @imgLoad="imgLoad"
       ></detail-goods-info>
       <detail-params :itemParams="itemParams" ref="params"></detail-params>
       <detail-comment-info
@@ -16,6 +21,8 @@
       ></detail-comment-info>
       <goods-list :goods="recommends" ref="recommend"></goods-list>
     </scroll>
+    <detail-bottom-bar @addCart= "addToCart"/>
+    <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
 
@@ -27,12 +34,13 @@ import DetailShopInfo from "./childComponents/DetailShopInfo.vue";
 import DetailGoodsInfo from "./childComponents/DetailGoodsInfo.vue";
 import DetailParams from "./childComponents/DetailParams.vue";
 import DetailCommentInfo from "./childComponents/DetailCommentInfo.vue";
-
+import DetailBottomBar from "./childComponents/DetailBottomBar.vue";
 import Scroll from "components/common/scroll/Scroll.vue";
 import GoodsList from "../../components/content/goods/GoodsList.vue";
 
 import { getDetail, Goods, Shop, getRecommend } from "network/detail.js";
-import { itemListenerMixin } from "common/mixin.js";
+import { debounce } from "common/utils.js";
+import { itemListenerMixin,backTopMixin } from "common/mixin.js";
 
 export default {
   name: "",
@@ -44,6 +52,7 @@ export default {
     DetailGoodsInfo,
     DetailParams,
     DetailCommentInfo,
+    DetailBottomBar,
     Scroll,
     GoodsList,
   },
@@ -58,6 +67,9 @@ export default {
       commentInfo: {},
       recommends: [],
       themeTopYs: [],
+      getThemeTopY: null,
+      currentIndex: null,
+      
     };
   },
   created() {
@@ -85,29 +97,74 @@ export default {
       if (data.rate.cRate !== 0) {
         this.commentInfo = data.rate.list[0];
 
-        // request recommend data
-        getRecommend().then((res) => {
-          this.recommends = res.data.list;
-        });
+        //
       }
+    });
+    //3. request recommend data
+    getRecommend().then((res) => {
+      this.recommends = res.data.list;
+    });
+    // 4.getThemeTopY
+    this.getThemeTopY = debounce(() => {
+      this.themeTopYs = [];
+      this.themeTopYs.push(0);
+      this.themeTopYs.push(this.$refs.params.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
+      this.themeTopYs.push(Number.MAX_VALUE);
     });
   },
   mounted() {},
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin,backTopMixin],
   methods: {
-    imageLoad() {
+    imgLoad() {
       this.newRefresh();
-        this.themeTopYs = []
-        this.themeTopYs.push(0);
-        this.themeTopYs.push(this.$refs.params.$el.offsetTop);
-        this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
-        this.themeTopYs.push(this.$refs.recommend.$el.offsetTop);
-        console.log(this.themeTopYs);
+      this.getThemeTopY();
     },
     titleClick(index) {
-      console.log(index);
       this.$refs.scroll.scrollTo(0, -this.themeTopYs[index], 200);
     },
+    contentScroll(pos) {
+      // ?probetype
+      const posY = -pos.y;
+      // console.log(posY);
+      let length = this.themeTopYs.length;
+      for (let i = 0; i < length - 1; i++) {
+        // 前三种情况 + 最后一种
+        // if (
+        //   this.currentIndex !== i &&
+        //   ((i < length - 1 &&
+        //     posY > this.themeTopYs[i] &&
+        //     posY <= this.themeTopYs[i + 1]) ||
+        //     (i === length - 1 && posY > this.themeTopYs[i]))
+        // ) {
+        //   this.currentIndex = i;
+        //   this.$refs.nav.currentIndex = this.currentIndex
+        // }
+        if (
+          this.currentIndex !== i &&
+          posY >= this.themeTopYs[i] &&
+          posY < this.themeTopYs[i + 1]
+        ) {
+          this.currentIndex = i;
+          this.$refs.nav.currentIndex = this.currentIndex;
+        }
+      }
+
+      // 3.backTop
+      this.isShowBackTop = -pos.y > 1000;
+      // 2,tabControl fixed or not
+      this.isTabFixed = -pos.y > this.tabOffsetTop;
+    },
+    addToCart(){
+      const product = {}
+      product.image = this.topImages[0]
+      product.title = this.goods.title
+      product.desc = this.goods.desc
+      product.realPrice =this.goods.realPrice
+      product.iid = this.iid
+
+    }
   },
 };
 </script>
@@ -121,7 +178,7 @@ export default {
 }
 
 .content {
-  height: calc(100% - 44px);
+  height: calc(100% - 93px);
 }
 
 .detail-nav {
