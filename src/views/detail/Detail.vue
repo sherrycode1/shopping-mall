@@ -7,6 +7,7 @@
       :probe-type="3"
       @scroll="contentScroll"
     >
+         <div>{{$store.state.cartList.length}}</div>
       <detail-swipper :top-images="topImages" />
       <detail-base-info :goods="goods"></detail-base-info>
       <detail-shop-info :shop="shop"></detail-shop-info>
@@ -164,6 +165,8 @@ export default {
       product.realPrice =this.goods.realPrice
       product.iid = this.iid
 
+      // add goods to state
+      this.$store.dispatch('addCart',product)
     }
   },
 };
