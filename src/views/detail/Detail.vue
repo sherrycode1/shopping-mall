@@ -7,7 +7,6 @@
       :probe-type="3"
       @scroll="contentScroll"
     >
-         <div>{{$store.state.cartList.length}}</div>
       <detail-swipper :top-images="topImages" />
       <detail-base-info :goods="goods"></detail-base-info>
       <detail-shop-info :shop="shop"></detail-shop-info>
@@ -44,7 +43,7 @@ import { debounce } from "common/utils.js";
 import { itemListenerMixin,backTopMixin } from "common/mixin.js";
 
 export default {
-  name: "",
+  name: "Detail",
   components: {
     DetailNavBar,
     DetailSwipper,
