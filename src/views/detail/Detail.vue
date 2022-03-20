@@ -21,8 +21,9 @@
       ></detail-comment-info>
       <goods-list :goods="recommends" ref="recommend"></goods-list>
     </scroll>
-    <detail-bottom-bar @addCart= "addToCart"/>
+    <detail-bottom-bar @addCart="addToCart" />
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
+
   </div>
 </template>
 
@@ -35,12 +36,15 @@ import DetailGoodsInfo from "./childComponents/DetailGoodsInfo.vue";
 import DetailParams from "./childComponents/DetailParams.vue";
 import DetailCommentInfo from "./childComponents/DetailCommentInfo.vue";
 import DetailBottomBar from "./childComponents/DetailBottomBar.vue";
+
 import Scroll from "components/common/scroll/Scroll.vue";
 import GoodsList from "../../components/content/goods/GoodsList.vue";
 
 import { getDetail, Goods, Shop, getRecommend } from "network/detail.js";
 import { debounce } from "common/utils.js";
-import { itemListenerMixin,backTopMixin } from "common/mixin.js";
+import { itemListenerMixin, backTopMixin } from "common/mixin.js";
+
+import { mapActions } from "vuex";
 
 export default {
   name: "Detail",
@@ -69,7 +73,7 @@ export default {
       themeTopYs: [],
       getThemeTopY: null,
       currentIndex: null,
-      
+   
     };
   },
   created() {
@@ -115,8 +119,9 @@ export default {
     });
   },
   mounted() {},
-  mixins: [itemListenerMixin,backTopMixin],
+  mixins: [itemListenerMixin, backTopMixin],
   methods: {
+    ...mapActions(["addCart"]),
     imgLoad() {
       this.newRefresh();
       this.getThemeTopY();
@@ -156,17 +161,26 @@ export default {
       // 2,tabControl fixed or not
       this.isTabFixed = -pos.y > this.tabOffsetTop;
     },
-    addToCart(){
-      const product = {}
-      product.image = this.topImages[0]
-      product.title = this.goods.title
-      product.desc = this.goods.desc
-      product.realPrice =this.goods.realPrice
-      product.iid = this.iid
+    addToCart() {
+      const product = {};
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.realPrice = this.goods.realPrice;
+      product.iid = this.iid;
 
       // add goods to state
-      this.$store.dispatch('addCart',product)
-    }
+      this.addCart(product).then((res) => {
+        // this.showToast = true
+        // this.message = res
+        console.log(res);
+        // setTimeout(() => {
+        //   this.showToast = false
+        //   this.message = ''
+        // }, 1500);
+        console.log(this.$toast);
+      });
+    },
   },
 };
 </script>
