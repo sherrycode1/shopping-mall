@@ -56,7 +56,7 @@ export default {
     },
     calcClick(){
       if(!this.isSelectAll){
-        
+        this.$toast.showToast('请选择要购买的商品')
       }
     }
   },

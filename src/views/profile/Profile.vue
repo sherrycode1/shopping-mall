@@ -1,13 +1,68 @@
 <template>
-  <h2>个人</h2>
+  <div class="profile">
+    <nav-bar class="nav-bar">
+      <div slot="center">我的档案</div>
+    </nav-bar>
+    <profile-bar>
+      <div slot="left">
+        <div class="picture">
+          <img src="~assets/img/1.png" alt="" />
+        </div>
+      </div>
+      <div slot="middle" class="middle">
+        <div class="login">登录/注册</div>
+        <div class="phone-number">
+         <svg t="1648226630738" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1911" width="16" height="16"><path d="M823.00322 24.512277l-591.737042 0c-11.307533 0-20.466124 9.15859-20.466124 20.466124l0 934.043199c0 11.2973 9.15859 20.466124 20.466124 20.466124l591.737042 0c11.307533 0 20.466124-9.168824 20.466124-20.466124L843.469344 44.978401C843.469344 33.670867 834.310753 24.512277 823.00322 24.512277zM802.537096 773.96127l-480.135268 0c-11.307533 0-20.466124 9.168824-20.466124 20.466124 0 11.307533 9.15859 20.466124 20.466124 20.466124l480.135268 0 0 143.661957-550.804794 0L251.732301 65.444525l550.804794 0L802.537096 773.96127z" p-id="1912" fill="#e6e6e6"></path><path d="M527.134699 886.514719m-48.461735 0a47.358 47.358 0 1 0 96.92347 0 47.358 47.358 0 1 0-96.92347 0Z" p-id="1913" fill="#e6e6e6"></path></svg>
+          暂无绑定手机号
+        </div>
+      </div>
+    </profile-bar>
+    <reamain-sum></reamain-sum>
+    <message-bar></message-bar>
+  </div>
 </template>
 
 <script>
+import NavBar from "components/common/navbar/NavBar.vue";
+import ProfileBar from "components/common/profilebar/ProfileBar.vue";
+import ReamainSum from './childComps/ReamainSum.vue'
+import MessageBar from './childComps/MessageBar.vue';
 export default {
   name: "Profile",
-  
+
+  components: {
+    NavBar,
+    ProfileBar,
+    ReamainSum,
+    MessageBar,
+  },
+
 };
 </script>
 
-<style>
+<style scoped>
+.nav-bar {
+  background-color: pink;
+  color: #fff;
+}
+
+.profile-bar {
+  background-color: pink;
+}
+.picture {
+  height: 89px;
+  text-align: center;
+}
+.picture img {
+  height: 100%;
+  border-radius: 50%;
+
+}
+.middle .login{
+  font-size: 18px;
+  padding-bottom: 13px;
+}
+.middle .phone-number{
+  font-size: 15px;
+}
 </style>

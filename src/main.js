@@ -7,8 +7,9 @@ import toast from 'components/common/toast'
 Vue.config.productionTip = false
 
 Vue.prototype.$bus = new Vue()
-
+// install toast 
 Vue.use(toast)
+
 new Vue({
   router,
   render: h => h(App),

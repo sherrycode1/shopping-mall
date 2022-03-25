@@ -23,7 +23,6 @@
     </scroll>
     <detail-bottom-bar @addCart="addToCart" />
     <back-top @click.native="backClick" v-show="isShowBackTop"></back-top>
-
   </div>
 </template>
 
@@ -73,7 +72,6 @@ export default {
       themeTopYs: [],
       getThemeTopY: null,
       currentIndex: null,
-   
     };
   },
   created() {
@@ -82,7 +80,7 @@ export default {
     // 2.request detail data recording to iid
     getDetail(this.iid).then((res) => {
       //  1. top banner data
-      console.log(res);
+      // console.log(res);
       const data = res.result;
       this.topImages = res.result.itemInfo.topImages;
       //  2.get goods data
@@ -173,12 +171,12 @@ export default {
       this.addCart(product).then((res) => {
         // this.showToast = true
         // this.message = res
-        console.log(res);
+        // console.log(this.$toast);
+        this.$toast.showToast(res);
         // setTimeout(() => {
         //   this.showToast = false
         //   this.message = ''
         // }, 1500);
-        console.log(this.$toast);
       });
     },
   },
