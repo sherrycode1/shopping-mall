@@ -11,7 +11,6 @@ export default {
  
     };
   },
-  // created 拿不到元素
   mounted() {
     
   },

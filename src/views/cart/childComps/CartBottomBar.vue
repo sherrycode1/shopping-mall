@@ -55,7 +55,7 @@ export default {
        }
     },
     calcClick(){
-      if(!this.isSelectAll){
+      if(!this.cartList.find(item => item.checked)){
         this.$toast.showToast('请选择要购买的商品')
       }
     }
