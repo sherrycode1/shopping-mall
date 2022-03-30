@@ -96,9 +96,6 @@ export default {
     // 2.cancel
     this.$bus.$off("itemImageLoad", this.ItemImgListener);
   },
-  destroyed() {
-    console.log("i am destoryed");
-  },
 
   mounted() {},
   mixins: [itemListenerMixin,backTopMixin],
