@@ -1,11 +1,11 @@
 <template>
-  <div class="category-wrapper">  
-      <category-left-nav :list="leftNav" @leftNavClick="leftNavClick" />
+  <div class="category-wrapper">
+    <category-left-nav :list="leftNav" @leftNavClick="leftNavClick" />
     <scroll>
       <category-list
         :itemMessage="itemMessage"
         class="category-list"
-      ></category-list> 
+      ></category-list>
     </scroll>
   </div>
 </template>
@@ -40,20 +40,17 @@ export default {
       getCategory().then((res) => {
         const leftNav = res.data.category.list;
         this.leftNav = leftNav;
-
-        console.log(leftNav);
       });
     },
     getSubCategory() {
       getSubCategory(this.currentType).then((res) => {
         this.itemMessage = res.data.list;
-        console.log(this.itemMessage);
       });
     },
     // control item
-    leftNavClick(res) {
-      this.currentType = res;
-      console.log(this.currentType);
+    leftNavClick(key) {
+      this.currentType = key;
+      this.getSubCategory();
     },
   },
 };
@@ -65,11 +62,13 @@ export default {
   flex-direction: row;
 }
 
-
-
-.wrapper{
+.wrapper {
   width: 70%;
-  padding-left: 29%;
+  margin-left: 29%;
   height: calc(100vh - 49px);
+}
+
+.category-list {
+  padding-bottom: 50px;
 }
 </style>

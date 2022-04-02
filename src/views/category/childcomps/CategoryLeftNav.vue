@@ -1,7 +1,13 @@
 <template>
   <div class="left-nav" v-if="list.length !== 0">
-    <div @click="leftNavClick(item.maitKey)" v-for="item in list" :key="item.maitKey" class="category-name">
-      {{item.title}}
+    <div
+      @click="leftNavClick(item.maitKey, index)"
+      v-for="(item, index) in list"
+      :class="{ active: index === currentIndex }"
+      :key="item.maitKey"
+      class="category-name"
+    >
+      {{ item.title }}
     </div>
   </div>
 </template>
@@ -19,13 +25,17 @@ export default {
   },
   data() {
     return {
-
+      currentIndex: 0,
     };
   },
   methods: {
-    leftNavClick(res){
-      this.$emit('leftNavClick',res)
-    }
+    leftNavClick(key, index) {
+      this.$emit("leftNavClick", key);
+      this.currentIndex = index;
+    },
+    // getClickIndex(index) {
+    //   this.$emit("getClickIndex", index);
+    // },
   },
 };
 </script>
@@ -39,14 +49,17 @@ export default {
   position: fixed;
 }
 
-.category-name{
+.category-name {
   height: 39px;
   font-size: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: pink;
-  
 }
 
+.active {
+  background-color: rgba(255, 255, 255, 0.685);
+  color: white;
+}
 </style>

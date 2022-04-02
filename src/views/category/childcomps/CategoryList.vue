@@ -1,7 +1,5 @@
 <template>
-  <div v-if="this.itemMessage!==0" class="category-list">
     <cartgory-list-item :itemMessage="itemMessage"></cartgory-list-item>
-  </div>
 </template>
 
 <script>
@@ -28,9 +26,4 @@ export default {
 </script>
 
 <style scoped>
-.category-list{
-  /* display: flex;
-  flex-wrap: wrap; */
-}
-
 </style>
